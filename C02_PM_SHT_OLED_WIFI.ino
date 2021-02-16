@@ -65,10 +65,6 @@ void setup(){
 
 void loop(){
 
-  // create payload
-
-  String payload = "air ";
-
   if (hasPM) {
     int PM2 = ag.getPM2_Raw();
     sendData("pm2 value=" + String(PM2));
