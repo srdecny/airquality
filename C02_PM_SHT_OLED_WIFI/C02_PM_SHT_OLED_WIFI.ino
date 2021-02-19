@@ -55,6 +55,14 @@ void setup(){
   display.flipScreenVertically();
   showTextRectangle("Init", String(ESP.getChipId(),HEX),true);
 
+  if (digitalRead(13)) {
+    connectWIFI = true;
+    showTextRectangle("WIFI", "YES", false);
+  } else {
+    connectWIFI = false;
+    showTextRectangle("WIFI", "NO", false);
+  }
+  
   if (hasPM) ag.PMS_Init();
   if (hasCO2) ag.CO2_Init();
   if (hasSHT) ag.TMP_RH_Init(0x44);
@@ -67,22 +75,22 @@ void loop(){
 
   if (hasPM) {
     int PM2 = ag.getPM2_Raw();
-    sendData("pm2 value=" + String(PM2));
+    if (connectWIFI) sendData("pm2 value=" + String(PM2));
     showTextRectangle("PM2",String(PM2),false);
     delay(3000);
   }
 
   if (hasCO2) {
     int CO2 = ag.getCO2_Raw();
-    sendData("co2 value=" +String(CO2));
+    if (connectWIFI) sendData("co2 value=" +String(CO2));
     showTextRectangle("CO2",String(CO2),false);
     delay(3000);
   }
 
   if (hasSHT) {
     TMP_RH result = ag.periodicFetchData();
-    sendData("tmp value=" +String(result.t));
-    sendData("hum value=" +String(result.rh));
+    if (connectWIFI) sendData("tmp value=" +String(result.t));
+    if (connectWIFI) sendData("hum value=" +String(result.rh));
     showTextRectangle(String(result.t),String(result.rh)+"%",false);
     delay(3000);
   }
